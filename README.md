@@ -13,6 +13,11 @@ En statisk sajt i `public/`: startsida, butik med varukorg och
 kommer, hur katalogen är uppbyggd, hur produktsidorna genereras och vad som
 återstår innan sajten kan ta betalt.
 
+## Återförsäljarportalen
+
+Grossist är 99 % av affären. [B2B-PLAN.md](B2B-PLAN.md) beskriver datamodell,
+godkännandeflöde, säkerhetskrav och de beslut som behövs innan bygget startar.
+
 ## Köra lokalt
 
 ```bash

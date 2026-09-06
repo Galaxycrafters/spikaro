@@ -105,11 +105,13 @@ public/
     css/spikaro.css          designsystemet, ett enda ark, numrerade avsnitt
     js/butik.js              varukorg, priser, filter, kassans inkopplingspunkt
     js/rorelse.js            rörelse, tema, meny
+    js/orgnr.js              validering av organisationsnummer (se B2B-PLAN.md)
     img/brand/               emblem-slup.svg, emblem-mark.svg, favikon.png
     img/arkiv/               historiska fotografier
     img/produkt/             38 produktbilder, 800 px och 440 px i WebP
 build/
   generera.mjs               bygger produktsidor + sitemap + robots.txt
+  prova-orgnr.mjs            prov för organisationsnummer-modulen
   vektorisera.sh             gör om graverad bild till SVG + favikon
 brand-source/                original, versionshanteras men publiceras inte
   logo-sailboat.png          1945 × 2037, källan till slupen

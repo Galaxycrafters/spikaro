@@ -185,10 +185,58 @@ massinskickning — annars fylls inkorgen av skräp första veckan.
 
 ---
 
-## 6. Var ska det köra? — beslut som behövs
+## 6. Var ska det köra?
 
-Tre rimliga vägar. Skillnaden ligger inte i vad kunden ser, utan i vem som får
-underhålla det om tre år.
+**Fortnox ändrar svaret.** Spikarö fakturerar i Fortnox i dag, och därmed ligger
+redan kundregistret, artikelregistret, de kundspecifika priserna och
+faktureringen där. Det är merparten av datamodellen i §3 — byggd, betald och
+underhållen av någon annan.
+
+Bygger man en portal vid sidan av får man ett *andra* kundregister och en *andra*
+prislista att hålla i takt med den första. Synkroniseringen är den dyra och
+felbenägna delen, inte inloggningsrutan.
+
+Det syns i priset. En skräddarsydd Fortnox-koppling med tvåvägssynk av artiklar,
+priser och lagersaldon ligger enligt marknadens egna prisuppgifter kring
+80 000–100 000 kr som engångskostnad. Mot 1,16 MSEK i omsättning och två
+förlustår är det ungefär åtta procent av årsomsättningen — för rörmokeri.
+
+Färdiga återförsäljarportaler som läser ur Fortnox kostar i stället från omkring
+**670 kr/mån** (portal 480 + integrationslicens 189), alltså cirka 8 000 kr om
+året. Drygt en halv procent av omsättningen.
+
+### Godkännandet löser sig självt
+
+Med Fortnox som källa blir §4 enklare än planerat. En återförsäljare kan logga in
+först när hen finns som kund i Fortnox — och kunden läggs upp i Fortnox efter
+kreditprövningen, vilket är precis Spikarös nuvarande rutin och står redan i
+köpvillkoren.
+
+Godkännandet blir alltså inte ett system att bygga. Det blir "vi la upp er som
+kund", som i dag. Flera av portalerna signerar dessutom med **BankID**, vilket är
+ett betydligt bättre svar på frågan *får den här personen företräda företaget*
+än ett organisationsnummer någonsin kan ge.
+
+### Alternativ på Fortnox egen marknadsplats
+
+Kategorin är välbefolkad, vilket är ett gott tecken — det är ingen
+enleverantörssatsning:
+
+| Produkt | Kort |
+|---|---|
+| **B2B portal** (Automatisera Mera) | Speglar kund- och artikelregister ur Fortnox. Kundspecifika priser, prisnivåer, BankID, order och fakturaunderlag tillbaka. Från 480 + 189 kr/mån. |
+| **App4Sales B2B-webbshop** | Kundspecifika priser, orderhistorik och lagersaldo i realtid, order synkas automatiskt. |
+| **B2B order** (Gung) | Inloggning mot eget sortiment, egna priser och historik. |
+| **HiCore Business för grossister** | Flera prislistor, del- och samlingsfakturering. |
+| **App4Sales sälj- & orderapp** | För säljare på väg, inte för kundens egen beställning. |
+
+Priserna är hämtade ur leverantörernas egna sidor och behöver bekräftas i ett
+samtal. Se checklistan i §9 innan något tecknas.
+
+### De tre ursprungliga vägarna
+
+Skillnaden ligger inte i vad kunden ser, utan i vem som får underhålla det om
+tre år.
 
 ### A. Supabase bakom nuvarande sajt
 
@@ -221,23 +269,44 @@ sköter fakturering och lager.
 - Löser fakturering och order i samma rörelse.
 - **Priset:** stort och tungt för fyra personer. Sannolikt fel storlek här.
 
-**Min rekommendation, med reservation för svaren nedan:** genomgången av gamla
-sajten visade ett bolag med 1,16 MSEK i omsättning, en till fyra anställda och
-förlust två år i rad. Det talar för **B** — lägre risk, ingen utvecklare i
-vardagen, och sådant som kreditgränser och fakturaunderlag är redan löst av
-någon annan. **A** blir rätt val om du själv tänker förvalta systemet, för då
-behålls allt som redan är byggt och den löpande kostnaden går mot noll.
+**Rekommendation: B, och närmare bestämt en portal som läser ur Fortnox.**
 
-### Frågor som avgör
+Ett bolag med 1,16 MSEK i omsättning, en till fyra anställda och förlust två år i
+rad ska inte ha ett egenbyggt affärskritiskt system att förvalta. Portalen är
+dessutom det som 99 % av intäkten går igenom — går den sönder en fredag i
+december är det inte en webbplats som ligger nere, det är försäljningen.
 
-1. **Vem underhåller portalen om två år?** Avgör A mot B.
-2. **Vilket bokföringssystem används i dag?** Fortnox och Visma är de vanliga i
-   Sverige och båda har färdiga kopplingar hos de flesta plattformar. Ska ordern
-   bli en faktura automatiskt, eller knappas den in för hand som i dag?
-3. **Ska företagsuppslag mot register ingå?** Ett API som bekräftar att
-   organisationsnumret finns och är aktivt kostar en liten summa per uppslag och
-   sparar handpåläggning. Utan det får Spikarö slå upp företaget själv vid
-   kreditprövningen — vilket de ändå gör.
+**A blir rätt** om portalen måste se ut och kännas som sajten här, och om du
+själv tänker förvalta den. Men Fortnox-kopplingen behövs ändå, och det är den
+delen som kostar — inte inloggningen.
+
+### Vad händer med det som redan är byggt?
+
+Ingenting går förlorat. Sajten här förblir varumärket utåt: berättelsen,
+sortimentet, konsumentbutiken. Portalen blir en inloggad del bredvid, rimligen på
+en egen adress som `handel.spikaro.se`. Det är en ärlig uppdelning — den publika
+sajten säljer varumärket, portalen sköter affären.
+
+Återförsäljarläget i `butik.html` blir då ett skyltfönster: det visar priser
+exklusive moms och pekar vidare till portalen för avtalade nettopriser.
+`orgnr.js` används i ansökningsformuläret, som fortfarande behövs — det är
+vägen in till kreditprövningen.
+
+## 9. Att kontrollera innan något tecknas
+
+Marknadsföringssidor säger sällan var det skaver. Boka demo och fråga:
+
+- **Momsen.** Livsmedel är 12 %, övrigt 25 %. Klarar portalen båda i samma order?
+- **Sortiment per kund.** Kan en kund se bara det hen får köpa? Julsortimentet
+  ska inte ligga framme i maj.
+- **Flera leveransadresser** per kund — kedjor levererar till flera butiker på
+  en faktura.
+- **Prislista som PDF.** Efterfrågas alltid av handlare.
+- **Mobilen.** Handlare beställer stående i butiken, inte vid ett skrivbord.
+- **Beställ om.** Går det att upprepa en tidigare order i två klick?
+- **Vad händer med data om avtalet sägs upp?** Fortnox äger kundregistret, men
+  orderhistoriken i portalen kan vara inlåst.
+- **Uppsägningstid och vad som ingår i uppstarten.**
 
 ---
 

@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://spikaro.se/sitemap.xml

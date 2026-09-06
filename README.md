@@ -1,30 +1,49 @@
 # spikaro
 
-Scaffolded by the Galaxycrafters Project Manager.
+Ny webbplats och butik för **Spikarö Karamell & Pralin Fabriks AB** — skärgårdsgodis
+från Alnö utanför Sundsvall, tillverkat efter gamla recept sedan 1992.
 
-## Live site (local / Tailscale)
+## Vad som finns här
 
-After create, the static site is served from this host at:
+En statisk sajt i `public/`: startsida, butik med varukorg och
+återförsäljarläge, och 38 genererade produktsidor med fullständig
+`schema.org/Product`-uppmärkning.
 
-**`/spikaro/`**
+**Läs [FOUNDATION.md](FOUNDATION.md) först.** Där står varifrån formspråket
+kommer, hur katalogen är uppbyggd, hur produktsidorna genereras och vad som
+återstår innan sajten kan ta betalt.
 
-Example: `http://100.102.206.63/spikaro/`
+## Återförsäljarportalen
 
-Source files live in `public/`.
+Grossist är 99 % av affären. [B2B-PLAN.md](B2B-PLAN.md) beskriver datamodell,
+godkännandeflöde, säkerhetskrav och de beslut som behövs innan bygget startar.
 
-## Brief
+## Köra lokalt
 
-If present, read **`BRIEF.md`** for product goals and constraints before changing code.
+```bash
+cd public && python3 -m http.server 8099
+```
 
-## Working with Claude
+Sajten serveras från den här värden under `/spikaro/`.
 
-1. Open or comment on a GitHub issue describing the change.
-2. Mention **`@claude`** so the Claude Code workflow can pick it up (self-hosted runner).
-3. Review the PR Claude opens; merge when ready.
+## Bygga om produktsidorna
 
-Requires the org/repo secret **`ANTHROPIC_API_KEY`**.
+Produktsidorna, `sitemap.xml` och `robots.txt` är genererade ur
+`public/data/katalog.json`. Redigera dem inte för hand:
 
-## Local clone
+```bash
+node build/generera.mjs
+```
+
+## Arbeta med Claude
+
+1. Öppna eller kommentera ett GitHub-ärende som beskriver ändringen.
+2. Nämn **`@claude`** så plockar Claude Code-workflowen upp det.
+3. Granska pull requesten och merga när den är klar.
+
+Kräver org/repo-hemligheten **`ANTHROPIC_API_KEY`**.
+
+## Lokal klon
 
 ```
 /home/peeth/projects/spikaro

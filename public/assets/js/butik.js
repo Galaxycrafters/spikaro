@@ -183,7 +183,7 @@ export function ritaLada() {
 
   if (s.antal === 0) {
     kropp.innerHTML = `<div class="empty">
-      <img src="${url('assets/img/brand/emblem-slup.png')}" alt="" width="96" height="78">
+      <span class="emblem" aria-hidden="true"></span>
       <p>Varukorgen är tom. Skärgårdsgodiset väntar i butiken.</p>
     </div>`;
     fot.innerHTML = `<a class="btn btn--wide btn--ghost" href="${url('butik.html')}">Till butiken</a>`;

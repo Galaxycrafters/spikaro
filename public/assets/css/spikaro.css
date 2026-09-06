@@ -139,7 +139,7 @@ body::before {
 .wrap  { width: min(100% - var(--gut) * 2, var(--max)); margin-inline: auto; }
 .wrap--narrow { width: min(100% - var(--gut) * 2, 780px); margin-inline: auto; }
 
-img { max-width: 100%; display: block; }
+img { max-width: 100%; display: block; height: auto; }
 [hidden] { display: none !important; }
 
 ::selection { background: var(--sage); color: var(--paper-raised); }
@@ -268,19 +268,58 @@ p { margin: 0 0 1.05em; max-width: var(--measure); }
 }
 .masthead.is-stuck .masthead__in { padding-block: .55rem; }
 
-.brand { display: block; flex: none; line-height: 0; }
-.brand img {
-  height: clamp(38px, 5.2vw, 54px);
+/* Varumärkeslåset: emblemet som bild, SPIKARÖ som levande text.
+   Texten sätts i Cinzel så den är knivskarp i alla storlekar, följer temat,
+   går att markera och läsas upp — till skillnad från en inbränd ordbild.   */
+.brand {
+  display: flex;
+  align-items: center;
+  gap: clamp(.5rem, 1vw, .8rem);
+  flex: none;
+  text-decoration: none;
+  color: var(--ink);
+  line-height: 1;
+}
+.brand__emblem {
+  height: clamp(40px, 5.4vw, 54px);
   width: auto;
+  flex: none;
   transition: height .4s var(--ease);
 }
-.masthead.is-stuck .brand img { height: 34px; }
-.brand .logo-light { display: none; }
-:root[data-theme="dark"] .brand .logo-dark  { display: none; }
-:root[data-theme="dark"] .brand .logo-light { display: block; }
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) .brand .logo-dark  { display: none; }
-  :root:not([data-theme="light"]) .brand .logo-light { display: block; }
+.brand:hover .brand__emblem { opacity: .82; }
+.masthead.is-stuck .brand__emblem { height: 34px; }
+
+.brand__type { display: flex; flex-direction: column; gap: .3em; }
+.brand__name {
+  font-family: var(--caps);
+  font-weight: 600;
+  font-size: clamp(1.02rem, 1.8vw, 1.3rem);
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+.brand__sub {
+  font-family: var(--caps);
+  font-weight: 500;
+  font-size: clamp(.42rem, .72vw, .52rem);
+  letter-spacing: .28em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  white-space: nowrap;
+}
+
+/* Emblemet är vektoriserat (build/vektorisera.sh) och läggs på som mask, så
+   det tar färg av currentColor. Därför behövs varken filter, inverterade
+   kopior eller separata filer för mörkt läge — slupen följer alltid texten,
+   på kraftpapper såväl som på den mörkgröna sidfoten.                      */
+.emblem { display: none; }
+@supports ((-webkit-mask-image: url("")) or (mask-image: url(""))) {
+  .emblem {
+    display: block;
+    aspect-ratio: 1480 / 1200;
+    background-color: currentColor;
+    -webkit-mask: url("../img/brand/emblem-slup.svg") center / contain no-repeat;
+            mask: url("../img/brand/emblem-slup.svg") center / contain no-repeat;
+  }
 }
 
 .nav { display: flex; align-items: center; gap: clamp(1rem, 2.4vw, 2rem); }
@@ -371,18 +410,11 @@ p { margin: 0 0 1.05em; max-width: var(--measure); }
 
 /* Emblemet som guppar på sjön */
 .hero__emblem { position: relative; display: grid; place-items: center; min-height: 300px; }
-.hero__emblem img {
-  width: min(340px, 78%);
-  filter: drop-shadow(0 12px 24px color-mix(in srgb, var(--ink) 16%, transparent));
+.hero__emblem .emblem {
+  width: min(360px, 80%);
+  color: var(--ink);
   animation: bob 7.5s ease-in-out infinite;
   transform-origin: 50% 88%;
-}
-.hero__emblem .emblem-light { display: none; }
-:root[data-theme="dark"] .hero__emblem .emblem-dark  { display: none; }
-:root[data-theme="dark"] .hero__emblem .emblem-light { display: block; }
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) .hero__emblem .emblem-dark  { display: none; }
-  :root:not([data-theme="light"]) .hero__emblem .emblem-light { display: block; }
 }
 @keyframes bob {
   0%, 100% { transform: translateY(0) rotate(-1.4deg); }
@@ -781,7 +813,7 @@ select.sel {
 .drawer__foot { flex: none; border-top: 1px solid var(--line); padding: 1.2rem 1.4rem; background: var(--paper); }
 
 .empty { text-align: center; padding: 3.5rem 1rem; color: var(--ink-faint); }
-.empty img { width: 96px; margin: 0 auto 1.2rem; opacity: .3; }
+.empty .emblem { width: 96px; margin: 0 auto 1.2rem; opacity: .32; color: var(--ink); }
 .empty p { margin: 0 auto; max-width: 30ch; font-size: .9rem; }
 
 .line {
@@ -889,7 +921,10 @@ select.sel {
   gap: clamp(1.6rem, 4vw, 3rem);
   padding-bottom: 2.6rem;
 }
-.footer img.mark { width: 168px; margin-bottom: 1.1rem; }
+.footer .brand { color: var(--deep-fg); margin-bottom: 1.1rem; align-items: flex-start; }
+.footer .brand__emblem { height: 62px; width: auto; }
+.footer .brand__name { font-size: 1.5rem; letter-spacing: .16em; }
+.footer .brand__sub  { font-size: .5rem; color: color-mix(in srgb, var(--deep-fg) 62%, transparent); white-space: normal; }
 .footer h3 {
   font-family: var(--caps);
   font-size: .64rem;
@@ -933,7 +968,7 @@ select.sel {
 @media (max-width: 940px) {
   .hero__in { grid-template-columns: 1fr; padding-block: 2.5rem 6rem; }
   .hero__emblem { order: -1; min-height: 200px; }
-  .hero__emblem img { width: min(240px, 60%); }
+  .hero__emblem .emblem { width: min(250px, 62%); }
   .section__head { grid-template-columns: 1fr; align-items: start; }
   .heritage { grid-template-columns: 1fr; }
   .pdp { grid-template-columns: 1fr; }

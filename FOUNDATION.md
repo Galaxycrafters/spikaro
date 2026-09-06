@@ -26,14 +26,27 @@ faktiska förpackningar och logotyp.
 | Spärrade versaler | Ordbilden `SPIKARÖ / KARAMELL & PRALIN / FABRIKS AKTIEBOLAG` |
 | Historiska fotografier | Carl Lindvalls speceriaffär, Södermalm i Sundsvall, ca 1910 |
 
-**Logotypen** finns i två utföranden. `spikaro-logotyp.png` är originalet.
-`spikaro-logotyp-ljus.png` är inverterad för mörka bottnar — graveringens vita
-papper blir mörkt och bläcket blir varmt krämvitt, vilket gör motivet till en
-ren linjeteckning. Den är genererad, inte omritad, så den följer originalet exakt.
-`emblem-slup.png` är enbart slupen, för favicon, sigill och tomma vyer.
+### Varumärkeslåset
 
-> Har ni logotypen som vektor (AI/EPS/SVG) bör den ersätta PNG-filerna. Rastret
-> här är uppskalat från 431 × 150 px, vilket är allt den gamla sajten innehöll.
+Låset är delat i två delar, och det är avsiktligt:
+
+- **Slupen** är en bild: `emblem-slup.svg`, vektoriserad ur graveringen.
+- **SPIKARÖ / KARAMELL & PRALIN** är **levande text** satt i Cinzel.
+
+Ordbilden är alltså inte längre inbränd i en PNG. Den är knivskarp i alla
+storlekar, följer temat, går att markera, söka i och läsa upp — och kan sättas
+om utan att någon rör en bildfil.
+
+Emblemet läggs på som CSS-mask med `background-color: currentColor`, så slupen
+tar färg av texten omkring sig. Därför behövs **en enda fil** för både ljust och
+mörkt läge och för den mörkgröna sidfoten. Inga filter, inga inverterade kopior.
+
+`spikaro-logotyp.png` finns kvar som originallåset — den används i
+`schema.org`-datat och som delningsbild, inte i gränssnittet.
+
+> Har ni graveringen i högre upplösning eller som vektor är den värd att köra in.
+> Källan här är 185 × 150 px, urklippt ur den gamla sajtens logotyp, vilket är
+> gränsen för hur fina strecken kan bli. Se §4.
 
 ---
 
@@ -43,7 +56,7 @@ ren linjeteckning. Den är genererad, inte omritad, så den följer originalet e
 public/
   index.html                 startsidan
   butik.html                 butiken: filter, sortering, prisläge, varukorg
-  produkt/<slug>.html        38 genererade produktsidor — RÖR EJ, se §4
+  produkt/<slug>.html        38 genererade produktsidor — RÖR EJ, se §5
   sitemap.xml                genererad
   robots.txt                 genererad
   data/katalog.json          hela sortimentet — den enda sanningskällan
@@ -51,11 +64,12 @@ public/
     css/spikaro.css          designsystemet, ett enda ark, numrerade avsnitt
     js/butik.js              varukorg, priser, filter, kassans inkopplingspunkt
     js/rorelse.js            rörelse, tema, meny
-    img/brand/               logotyp, emblem (mörk + ljus)
+    img/brand/               emblem-slup.svg (vektor), originallåset som PNG
     img/arkiv/               historiska fotografier
     img/produkt/             38 produktbilder, 800 px och 440 px i WebP
 build/
   generera.mjs               bygger produktsidor + sitemap + robots.txt
+  vektorisera.sh             gör om graverad bild till SVG
 ```
 
 ---
@@ -116,7 +130,24 @@ Detta är fel som finns i källdatat och som bör åtgärdas hos Spikarö:
 
 ---
 
-## 4. Bygga om produktsidorna
+## 4. Vektorisera om emblemet
+
+Kommer en skarpare skanning av graveringen — kör:
+
+```bash
+build/vektorisera.sh <källbild.png|jpg>
+```
+
+Den plattar ut genomskinlighet, skalar upp 8×, trösklar och kör `potrace`, och
+skriver `public/assets/img/brand/emblem-slup.svg` med `fill="currentColor"`.
+Kräver `potrace` (`sudo apt install potrace`) och `ffmpeg`.
+
+Vektorisering är rätt väg för en pennteckning — bättre än att skala upp ett
+raster, eftersom strecken blir riktiga kurvor i stället för utsmetade pixlar.
+Tröskelvärdena i skriptet är avvägda för fin skraffering; med en bättre källa
+går de att skruva åt hårdare.
+
+## 5. Bygga om produktsidorna
 
 Produktsidorna är **genererade**. Redigera dem inte för hand — ändringarna
 skrivs över. Ändra `katalog.json` och kör om:
@@ -140,7 +171,7 @@ Varje sida får det den gamla butiken saknade:
 
 ---
 
-## 5. Butiken
+## 6. Butiken
 
 **Prisläge.** Växeln *Återförsäljare* i butiken slår om hela sajten mellan
 privatpris (inkl. 12 % moms) och pris exkl. moms. Valet sparas per besökare.
@@ -170,7 +201,7 @@ Swish Handel är ett anrop till en endpoint som returnerar en betallänk.
 
 ---
 
-## 6. Designsystemet
+## 7. Designsystemet
 
 `spikaro.css` är ett ark med numrerade avsnitt (§1 tokens … §20 kassamodal).
 
@@ -178,7 +209,10 @@ Swish Handel är ett anrop till en endpoint som returnerar en betallänk.
 läge, och explicit valt mörkt läge. Ingen färg definieras bara inuti en
 mediefråga; då hade sidan renderat ena temats text på det andras botten.
 
-En fälla värd att känna till: `--deep-bg` / `--deep-fg` är egna tokens för de
+Två fällor värda att känna till. Den första: fristående bilder måste ha
+`height: auto` när bredden sätts i CSS — annars använder webbläsaren
+`height`-attributet bokstavligt och bilden sträcks ut. Det gäller globalt via
+`img`-regeln i §2. Den andra: `--deep-bg` / `--deep-fg` är egna tokens för de
 gröna panelerna (ticker, arvsektionen, sidfoten). De får **aldrig** härledas ur
 `--paper`/`--ink`, eftersom de då kastas om i mörkt läge och panelen blir ljus
 mitt på en mörk sida. Det felet fanns i första utkastet och är rättat.
@@ -195,7 +229,7 @@ sidhuvudet som krymper och varukorgen som glider in.
 
 ---
 
-## 7. Prestanda
+## 8. Prestanda
 
 Bilderna var det största enskilda problemet på gamla sajten: miniatyrbilden
 `/tn/…jpg` var **byte för byte identisk** med originalet, så en kategorisida
@@ -214,11 +248,11 @@ utom den första på produktsidan, och beskrivande `alt`.
 
 ---
 
-## 8. Vad som återstår
+## 9. Vad som återstår
 
 I ungefärlig ordning:
 
-1. **Koppla in betalning.** Se §5. Utan den kan sajten inte ta emot order.
+1. **Koppla in betalning.** Se §6. Utan den kan sajten inte ta emot order.
 2. **Reda ut exporten från LAN Konsult.** Det här bygget läser 38 artiklar som
    hämtats från den publika sajten. Order- och kundhistorik, återförsäljarkonton
    och bilder i originalupplösning finns bara i den gamla plattformen.
@@ -237,7 +271,7 @@ I ungefärlig ordning:
 
 ---
 
-## 9. Köra lokalt
+## 10. Köra lokalt
 
 ```bash
 cd public && python3 -m http.server 8099

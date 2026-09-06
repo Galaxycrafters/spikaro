@@ -30,7 +30,7 @@ faktiska förpackningar och logotyp.
 
 Låset är delat i två delar, och det är avsiktligt:
 
-- **Slupen** är en bild: `emblem-slup.svg`, vektoriserad ur graveringen.
+- **Slupen** är en bild, vektoriserad ur graveringen.
 - **SPIKARÖ / KARAMELL & PRALIN** är **levande text** satt i Cinzel.
 
 Ordbilden är alltså inte längre inbränd i en PNG. Den är knivskarp i alla
@@ -41,12 +41,21 @@ Emblemet läggs på som CSS-mask med `background-color: currentColor`, så slupe
 tar färg av texten omkring sig. Därför behövs **en enda fil** för både ljust och
 mörkt läge och för den mörkgröna sidfoten. Inga filter, inga inverterade kopior.
 
-`spikaro-logotyp.png` finns kvar som originallåset — den används i
-`schema.org`-datat och som delningsbild, inte i gränssnittet.
+Slupen finns i **två utföranden**, som gör olika jobb:
 
-> Har ni graveringen i högre upplösning eller som vektor är den värd att köra in.
-> Källan här är 185 × 150 px, urklippt ur den gamla sajtens logotyp, vilket är
-> gränsen för hur fina strecken kan bli. Se §4.
+| Fil | Storlek | Används |
+|---|---|---|
+| `emblem-slup.svg` | 198 kB (77 kB gzip) | Hela teckningen — himmel, slup, vatten, konstnärens signatur. Stort på startsidan, bara där. |
+| `emblem-mark.svg` | 72 kB (29 kB gzip) | Bara fartyget, hårdare förenklat. Litet i sidhuvud, sidfot och varukorg — på varje sida. |
+
+Uppdelningen är prestanda, inte pynt. Den fulla teckningen är ~1 050 separata
+penndrag; i sidhuvudet visas den i 56 px, där all skraffering ändå bara blir grå
+gröt. Märket ger samma silhuett för en tredjedel av vikten, och det är den fil
+som varje sida betalar för.
+
+Originalen ligger i `brand-source/` — utanför `public/`, så de versionshanteras
+men skickas aldrig till besökaren. `logo-sailboat.png` (1945 × 2037) är källan
+allt annat genereras ur.
 
 ---
 
@@ -64,12 +73,15 @@ public/
     css/spikaro.css          designsystemet, ett enda ark, numrerade avsnitt
     js/butik.js              varukorg, priser, filter, kassans inkopplingspunkt
     js/rorelse.js            rörelse, tema, meny
-    img/brand/               emblem-slup.svg (vektor), originallåset som PNG
+    img/brand/               emblem-slup.svg, emblem-mark.svg, favikon.png
     img/arkiv/               historiska fotografier
     img/produkt/             38 produktbilder, 800 px och 440 px i WebP
 build/
   generera.mjs               bygger produktsidor + sitemap + robots.txt
-  vektorisera.sh             gör om graverad bild till SVG
+  vektorisera.sh             gör om graverad bild till SVG + favikon
+brand-source/                original, versionshanteras men publiceras inte
+  logo-sailboat.png          1945 × 2037, källan till slupen
+  spikaro-logotyp-original.png  gamla sajtens inbrända ordbild, för referens
 ```
 
 ---
@@ -130,22 +142,26 @@ Detta är fel som finns i källdatat och som bör åtgärdas hos Spikarö:
 
 ---
 
-## 4. Vektorisera om emblemet
+## 4. Vektorisera om slupen
 
-Kommer en skarpare skanning av graveringen — kör:
+Kommer en ny eller skarpare skanning — lägg den i `brand-source/` och kör:
 
 ```bash
-build/vektorisera.sh <källbild.png|jpg>
+build/vektorisera.sh brand-source/logo-sailboat.png
 ```
 
-Den plattar ut genomskinlighet, skalar upp 8×, trösklar och kör `potrace`, och
-skriver `public/assets/img/brand/emblem-slup.svg` med `fill="currentColor"`.
-Kräver `potrace` (`sudo apt install potrace`) och `ffmpeg`.
+Skriptet plattar ut genomskinlighet, trösklar och kör `potrace`, och skriver
+alla tre filerna: `emblem-slup.svg`, `emblem-mark.svg` och `favikon.png`.
+Banorna får `fill="currentColor"`. Kräver `potrace` och `ffmpeg`
+(`sudo apt install potrace ffmpeg`).
+
+Beskärningen till märket anges i andelar av originalets mått, så den följer med
+även om en ny skanning har andra pixelmått.
 
 Vektorisering är rätt väg för en pennteckning — bättre än att skala upp ett
 raster, eftersom strecken blir riktiga kurvor i stället för utsmetade pixlar.
-Tröskelvärdena i skriptet är avvägda för fin skraffering; med en bättre källa
-går de att skruva åt hårdare.
+Vill man skruva: `--turdsize` slänger småprickar, `-a` jämnar hörn och `-O`
+styr hur hårt kurvorna förenklas. Högre värden ger mindre fil och grövre streck.
 
 ## 5. Bygga om produktsidorna
 

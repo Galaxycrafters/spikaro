@@ -281,8 +281,9 @@ p { margin: 0 0 1.05em; max-width: var(--measure); }
   line-height: 1;
 }
 .brand__emblem {
-  height: clamp(40px, 5.4vw, 54px);
+  height: clamp(42px, 5.6vw, 56px);
   width: auto;
+  aspect-ratio: 1630 / 1490;
   flex: none;
   transition: height .4s var(--ease);
 }
@@ -311,14 +312,26 @@ p { margin: 0 0 1.05em; max-width: var(--measure); }
    det tar färg av currentColor. Därför behövs varken filter, inverterade
    kopior eller separata filer för mörkt läge — slupen följer alltid texten,
    på kraftpapper såväl som på den mörkgröna sidfoten.                      */
-.emblem { display: none; }
+.emblem, .emblem-mark { display: none; }
 @supports ((-webkit-mask-image: url("")) or (mask-image: url(""))) {
-  .emblem {
+  .emblem, .emblem-mark {
     display: block;
-    aspect-ratio: 1480 / 1200;
     background-color: currentColor;
-    -webkit-mask: url("../img/brand/emblem-slup.svg") center / contain no-repeat;
-            mask: url("../img/brand/emblem-slup.svg") center / contain no-repeat;
+    -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
+    -webkit-mask-position: center;  mask-position: center;
+    -webkit-mask-size: contain;     mask-size: contain;
+  }
+  /* Hela teckningen — himmel, slup, vatten, signatur. Bara startsidan. */
+  .emblem {
+    aspect-ratio: 1945 / 2037;
+    -webkit-mask-image: url("../img/brand/emblem-slup.svg");
+            mask-image: url("../img/brand/emblem-slup.svg");
+  }
+  /* Bara fartyget, hårdare förenklat. Litet, på varje sida. */
+  .emblem-mark {
+    aspect-ratio: 1630 / 1490;
+    -webkit-mask-image: url("../img/brand/emblem-mark.svg");
+            mask-image: url("../img/brand/emblem-mark.svg");
   }
 }
 
@@ -409,12 +422,18 @@ p { margin: 0 0 1.05em; max-width: var(--measure); }
 .hero__est::before { content: ""; width: 42px; height: 1px; background: var(--brass); }
 
 /* Emblemet som guppar på sjön */
-.hero__emblem { position: relative; display: grid; place-items: center; min-height: 300px; }
+.hero__emblem { position: relative; display: grid; place-items: center; min-height: 340px; }
 .hero__emblem .emblem {
-  width: min(360px, 80%);
+  width: min(430px, 88%);
   color: var(--ink);
   animation: bob 7.5s ease-in-out infinite;
   transform-origin: 50% 88%;
+  /* Masken är en detaljrik teckning. Utan eget kompositlager rastreras den om
+     varje bildruta medan slupen guppar, vilket kostar mycket. Med lagret
+     rastreras den en gång och bara transformen animeras på grafikkortet.    */
+  will-change: transform;
+  backface-visibility: hidden;
+  contain: paint;
 }
 @keyframes bob {
   0%, 100% { transform: translateY(0) rotate(-1.4deg); }
@@ -813,7 +832,7 @@ select.sel {
 .drawer__foot { flex: none; border-top: 1px solid var(--line); padding: 1.2rem 1.4rem; background: var(--paper); }
 
 .empty { text-align: center; padding: 3.5rem 1rem; color: var(--ink-faint); }
-.empty .emblem { width: 96px; margin: 0 auto 1.2rem; opacity: .32; color: var(--ink); }
+.empty .emblem-mark { width: 104px; margin: 0 auto 1.2rem; opacity: .32; color: var(--ink); }
 .empty p { margin: 0 auto; max-width: 30ch; font-size: .9rem; }
 
 .line {
@@ -922,7 +941,7 @@ select.sel {
   padding-bottom: 2.6rem;
 }
 .footer .brand { color: var(--deep-fg); margin-bottom: 1.1rem; align-items: flex-start; }
-.footer .brand__emblem { height: 62px; width: auto; }
+.footer .brand__emblem { height: 66px; width: auto; }
 .footer .brand__name { font-size: 1.5rem; letter-spacing: .16em; }
 .footer .brand__sub  { font-size: .5rem; color: color-mix(in srgb, var(--deep-fg) 62%, transparent); white-space: normal; }
 .footer h3 {
@@ -968,7 +987,7 @@ select.sel {
 @media (max-width: 940px) {
   .hero__in { grid-template-columns: 1fr; padding-block: 2.5rem 6rem; }
   .hero__emblem { order: -1; min-height: 200px; }
-  .hero__emblem .emblem { width: min(250px, 62%); }
+  .hero__emblem .emblem { width: min(260px, 66%); }
   .section__head { grid-template-columns: 1fr; align-items: start; }
   .heritage { grid-template-columns: 1fr; }
   .pdp { grid-template-columns: 1fr; }

@@ -312,20 +312,26 @@ p { margin: 0 0 1.05em; max-width: var(--measure); }
    det tar färg av currentColor. Därför behövs varken filter, inverterade
    kopior eller separata filer för mörkt läge — slupen följer alltid texten,
    på kraftpapper såväl som på den mörkgröna sidfoten.                      */
-.emblem, .emblem-mark { display: none; }
+.emblem, .emblem-mark, .emblem-sjo { display: none; }
 @supports ((-webkit-mask-image: url("")) or (mask-image: url(""))) {
-  .emblem, .emblem-mark {
+  .emblem, .emblem-mark, .emblem-sjo {
     display: block;
     background-color: currentColor;
     -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
     -webkit-mask-position: center;  mask-position: center;
     -webkit-mask-size: contain;     mask-size: contain;
   }
-  /* Hela teckningen — himmel, slup, vatten, signatur. Bara startsidan. */
+  /* Fartyget — det som gungar. Bara startsidan. */
   .emblem {
     aspect-ratio: 1945 / 2037;
     -webkit-mask-image: url("../img/brand/emblem-slup.svg");
             mask-image: url("../img/brand/emblem-slup.svg");
+  }
+  /* Himmel, vatten och signatur — ligger stilla bakom fartyget. */
+  .emblem-sjo {
+    aspect-ratio: 1945 / 2037;
+    -webkit-mask-image: url("../img/brand/emblem-sjo.svg");
+            mask-image: url("../img/brand/emblem-sjo.svg");
   }
   /* Bara fartyget, hårdare förenklat. Litet, på varje sida. */
   .emblem-mark {
@@ -423,21 +429,33 @@ p { margin: 0 0 1.05em; max-width: var(--measure); }
 
 /* Emblemet som guppar på sjön */
 .hero__emblem { position: relative; display: grid; place-items: center; min-height: 340px; }
-.hero__emblem .emblem {
+/* Scenen: två lager i exakt samma koordinatsystem. Sjön ligger stilla,
+   fartyget gungar ovanpå. Därav uppdelningen i två SVG-filer.              */
+.slup-scen {
+  position: relative;
   width: min(430px, 88%);
+  aspect-ratio: 1945 / 2037;
   color: var(--ink);
-  animation: bob 7.5s ease-in-out infinite;
-  transform-origin: 50% 88%;
+}
+.slup-scen > * { position: absolute; inset: 0; width: 100%; height: 100%; }
+.slup-scen .emblem-sjo { opacity: .78; }
+.slup-scen .emblem {
+  animation: gunga 9s ease-in-out infinite;
+  transform-origin: 54% 76%;      /* vattenlinjen, där ett skrov faktiskt vrider sig */
   /* Masken är en detaljrik teckning. Utan eget kompositlager rastreras den om
-     varje bildruta medan slupen guppar, vilket kostar mycket. Med lagret
+     varje bildruta medan slupen gungar, vilket kostar mycket. Med lagret
      rastreras den en gång och bara transformen animeras på grafikkortet.    */
   will-change: transform;
   backface-visibility: hidden;
-  contain: paint;
 }
-@keyframes bob {
-  0%, 100% { transform: translateY(0) rotate(-1.4deg); }
-  50%      { transform: translateY(-11px) rotate(1.4deg); }
+/* Rullning och lyft i olika takt — ett skrov som rider på svall, inte en
+   bild som vaggar fram och tillbaka. */
+@keyframes gunga {
+  0%   { transform: translateY(0)    rotate(-1.5deg); }
+  25%  { transform: translateY(-7px) rotate(0deg); }
+  50%  { transform: translateY(-2px) rotate(1.5deg); }
+  75%  { transform: translateY(-8px) rotate(0deg); }
+  100% { transform: translateY(0)    rotate(-1.5deg); }
 }
 
 /* Vågorna längst ner i hero */

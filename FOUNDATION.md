@@ -45,13 +45,20 @@ Slupen finns i **två utföranden**, som gör olika jobb:
 
 | Fil | Storlek | Används |
 |---|---|---|
-| `emblem-slup.svg` | 198 kB (77 kB gzip) | Hela teckningen — himmel, slup, vatten, konstnärens signatur. Stort på startsidan, bara där. |
-| `emblem-mark.svg` | 72 kB (29 kB gzip) | Bara fartyget, hårdare förenklat. Litet i sidhuvud, sidfot och varukorg — på varje sida. |
+| `emblem-slup.svg` | 128 kB (49 kB gzip) | Fartyget — skrov, master, segel, rigg, besättning. Startsidans **rörliga** lager. |
+| `emblem-sjo.svg` | 45 kB (17 kB gzip) | Himmel, vatten och konstnärens signatur. Ligger **stilla** bakom fartyget. |
+| `emblem-mark.svg` | 72 kB (29 kB gzip) | Hela fartyget i ett, hårdare förenklat. Litet i sidhuvud, sidfot och varukorg — på varje sida. |
 
-Uppdelningen är prestanda, inte pynt. Den fulla teckningen är ~1 050 separata
-penndrag; i sidhuvudet visas den i 56 px, där all skraffering ändå bara blir grå
-gröt. Märket ger samma silhuett för en tredjedel av vikten, och det är den fil
-som varje sida betalar för.
+Två skäl till uppdelningen.
+
+**Rörelsen.** Ett skrov gungar; havet gör det inte. Låg allt i en enda fil
+vaggade hela världen med när slupen rörde sig. Nu ligger sjön still och bara
+fartyget rullar, kring vattenlinjen där ett skrov faktiskt vrider sig.
+
+**Vikten.** Teckningen är omkring 1 050 separata penndrag. I sidhuvudet visas
+den i 56 px, där all skraffering ändå bara blir grå gröt. Märket ger samma
+silhuett för en tredjedel av vikten, och det är den fil varje sida betalar för —
+scenens två lager laddas bara på startsidan.
 
 Originalen ligger i `brand-source/` — utanför `public/`, så de versionshanteras
 men skickas aldrig till besökaren. `logo-sailboat.png` (1945 × 2037) är källan
@@ -150,10 +157,20 @@ Kommer en ny eller skarpare skanning — lägg den i `brand-source/` och kör:
 build/vektorisera.sh brand-source/logo-sailboat.png
 ```
 
-Skriptet plattar ut genomskinlighet, trösklar och kör `potrace`, och skriver
-alla tre filerna: `emblem-slup.svg`, `emblem-mark.svg` och `favikon.png`.
-Banorna får `fill="currentColor"`. Kräver `potrace` och `ffmpeg`
+Skriptet plattar ut genomskinlighet, delar teckningen i fartyg och bakgrund,
+trösklar och kör `potrace`. Ut kommer `emblem-slup.svg`, `emblem-sjo.svg`,
+`emblem-mark.svg` och `favikon.png`, med `fill="currentColor"` på banorna.
+Tar under tio sekunder. Kräver `potrace` och `ffmpeg`
 (`sudo apt install potrace ffmpeg`).
+
+**Så delas fartyget från bakgrunden** (`build/separera.py`): fartyget är en
+sammanhängande massa — skrov, mast, bom, segelkanter, vant och stag hänger ihop
+hela vägen, medan himmels- och vågstrecken är fristående penndrag som inte rör
+vid skrovet. Skriptet etiketterar sammanhängande områden och tar det största som
+fartyg. Skraffering *inuti* seglen ligger som lösa streck som inte nuddar
+segelkanten; de fångas av ett omslutningstest — har en punkt fartygsbläck åt
+alla fyra håll ligger den innanför fartyget och hör dit. Utfallet på nuvarande
+källa: 1 019 områden, varav 471 omslutna, 87 % av bläcket till fartyget.
 
 Beskärningen till märket anges i andelar av originalets mått, så den följer med
 även om en ny skanning har andra pixelmått.

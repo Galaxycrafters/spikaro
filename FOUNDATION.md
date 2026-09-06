@@ -48,7 +48,8 @@ Slupen finns i **två utföranden**, som gör olika jobb:
 | `emblem-slup.svg` | 130 kB (50 kB gzip) | Fartyget — skrov, master, segel, rigg, besättning. |
 | `emblem-himmel.svg` | 19 kB (7 kB gzip) | Luftens streck ovanför vattenlinjen. |
 | `emblem-vatten.svg` | 23 kB (9 kB gzip) | Vågstrecken, krusningarna vid skrovet och konstnärens signatur. |
-| `emblem-mark.svg` | 72 kB (29 kB gzip) | Hela fartyget i ett, hårdare förenklat. Litet i sidhuvud, sidfot och varukorg — på varje sida. |
+| `emblem-mark.svg` | 59 kB (23 kB gzip) | **Enbart fartyget**, tätt beskuret och hårdare förenklat. Litet i sidhuvud, sidfot och varukorg — på varje sida. |
+| `favikon.png` | 21 kB | **Enbart fartyget** på en rundad kraftpappersbricka, 180 × 180. |
 
 Två skäl till uppdelningen.
 
@@ -71,7 +72,18 @@ glipa vid bildkanten.
 **Vikten.** Teckningen är omkring 1 050 separata penndrag. I sidhuvudet visas
 den i 56 px, där all skraffering ändå bara blir grå gröt. Märket ger samma
 silhuett för en tredjedel av vikten, och det är den fil varje sida betalar för —
-scenens två lager laddas bara på startsidan.
+scenens tre lager laddas bara på startsidan.
+
+**Märket och favikonen visar bara skrovet.** Himmel och vatten är stämning i
+stort format och grus i litet; i 56 px eller 16 px blir de bara smuts runt
+silhuetten. Båda byggs därför ur fartygslagret, tätt beskuret kring skrovets
+ram — som mäts vid varje bygge, så beskärningen följer med om källbilden byts
+ut. Favikonen läggs på en rundad kraftpappersbricka med genomskinliga hörn, så
+bläcket syns även i mörka flikrader.
+
+Proportionen på `emblem-mark.svg` skrivs in i `spikaro.css` av byggskriptet
+(raden märkt `MARK-RAM`). Rör den inte för hand — annars blir märket utdraget
+nästa gång fartyget får andra mått.
 
 Originalen ligger i `brand-source/` — utanför `public/`, så de versionshanteras
 men skickas aldrig till besökaren. `logo-sailboat.png` (1945 × 2037) är källan

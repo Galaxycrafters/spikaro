@@ -339,9 +339,10 @@ p { margin: 0 0 1.05em; max-width: var(--measure); }
     -webkit-mask-image: url("../img/brand/emblem-vatten.svg");
             mask-image: url("../img/brand/emblem-vatten.svg");
   }
-  /* Bara fartyget, hårdare förenklat. Litet, på varje sida. */
+  /* Bara fartyget, hårdare förenklat. Litet, på varje sida.
+     Proportionen skrivs av build/vektorisera.sh — rör den inte för hand. */
   .emblem-mark {
-    aspect-ratio: 1630 / 1490;
+    aspect-ratio: 1790 / 1647; /* MARK-RAM */
     -webkit-mask-image: url("../img/brand/emblem-mark.svg");
             mask-image: url("../img/brand/emblem-mark.svg");
   }

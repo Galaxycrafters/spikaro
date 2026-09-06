@@ -45,15 +45,28 @@ Slupen finns i **två utföranden**, som gör olika jobb:
 
 | Fil | Storlek | Används |
 |---|---|---|
-| `emblem-slup.svg` | 128 kB (49 kB gzip) | Fartyget — skrov, master, segel, rigg, besättning. Startsidans **rörliga** lager. |
-| `emblem-sjo.svg` | 45 kB (17 kB gzip) | Himmel, vatten och konstnärens signatur. Ligger **stilla** bakom fartyget. |
+| `emblem-slup.svg` | 128 kB (49 kB gzip) | Fartyget — skrov, master, segel, rigg, besättning. |
+| `emblem-himmel.svg` | 21 kB (8 kB gzip) | Luftens streck ovanför vattenlinjen. |
+| `emblem-vatten.svg` | 23 kB (9 kB gzip) | Vågstrecken och konstnärens signatur. |
 | `emblem-mark.svg` | 72 kB (29 kB gzip) | Hela fartyget i ett, hårdare förenklat. Litet i sidhuvud, sidfot och varukorg — på varje sida. |
 
 Två skäl till uppdelningen.
 
-**Rörelsen.** Ett skrov gungar; havet gör det inte. Låg allt i en enda fil
-vaggade hela världen med när slupen rörde sig. Nu ligger sjön still och bara
-fartyget rullar, kring vattenlinjen där ett skrov faktiskt vrider sig.
+**Rörelsen.** Låg allt i en enda fil vaggade hela världen med när slupen rörde
+sig, som om horisonten lutade. Nu har varje del sin egen takt:
+
+| Lager | Rörelse | Period | Opacitet |
+|---|---|---|---|
+| Fartyget | rullar ±1,5° kring vattenlinjen, lyfter 8 px | 9 s | 1 |
+| Vattnet | skvalpar ±5 px i sidled, ±2,5 px i höjd | 13 s | 0,8 |
+| Luften | driver ±7 px i sidled | 34 s | 0,5 |
+
+Perioderna går inte jämnt upp i varandra, så scenen upprepar sig aldrig
+synligt — den bara pågår. Rotationen sker kring 54 % / 76 %, alltså
+vattenlinjen, där ett skrov faktiskt vrider sig, inte kring bildens mitt.
+Luften är svagast och vattnet däremellan, vilket ger atmosfäriskt djup.
+Sidledsrörelserna är symmetriska kring noll så strecken aldrig lämnar en
+glipa vid bildkanten.
 
 **Vikten.** Teckningen är omkring 1 050 separata penndrag. I sidhuvudet visas
 den i 56 px, där all skraffering ändå bara blir grå gröt. Märket ger samma
@@ -157,9 +170,10 @@ Kommer en ny eller skarpare skanning — lägg den i `brand-source/` och kör:
 build/vektorisera.sh brand-source/logo-sailboat.png
 ```
 
-Skriptet plattar ut genomskinlighet, delar teckningen i fartyg och bakgrund,
-trösklar och kör `potrace`. Ut kommer `emblem-slup.svg`, `emblem-sjo.svg`,
-`emblem-mark.svg` och `favikon.png`, med `fill="currentColor"` på banorna.
+Skriptet plattar ut genomskinlighet, delar teckningen i tre lager, trösklar och
+kör `potrace`. Ut kommer `emblem-slup.svg`, `emblem-himmel.svg`,
+`emblem-vatten.svg`, `emblem-mark.svg` och `favikon.png`, med
+`fill="currentColor"` på banorna.
 Tar under tio sekunder. Kräver `potrace` och `ffmpeg`
 (`sudo apt install potrace ffmpeg`).
 
@@ -169,8 +183,14 @@ hela vägen, medan himmels- och vågstrecken är fristående penndrag som inte r
 vid skrovet. Skriptet etiketterar sammanhängande områden och tar det största som
 fartyg. Skraffering *inuti* seglen ligger som lösa streck som inte nuddar
 segelkanten; de fångas av ett omslutningstest — har en punkt fartygsbläck åt
-alla fyra håll ligger den innanför fartyget och hör dit. Utfallet på nuvarande
-källa: 1 019 områden, varav 471 omslutna, 87 % av bläcket till fartyget.
+alla fyra håll ligger den innanför fartyget och hör dit.
+
+Resten delas sedan på **fartygets egen vattenlinje** — skrovets underkant, som
+skriptet mäter fram. Penndrag ovanför blir luft, nedanför blir vatten. Fartyget
+ligger emellan, så gränsen är entydig och inget hamnar i kläm.
+
+Utfallet på nuvarande källa: 1 019 områden, varav 471 omslutna. Vattenlinjen
+hamnar på y=1540 av 2037. Fördelningen blir 87 % fartyg, 2 % luft, 11 % vatten.
 
 Beskärningen till märket anges i andelar av originalets mått, så den följer med
 även om en ny skanning har andra pixelmått.

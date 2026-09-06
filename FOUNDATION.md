@@ -45,9 +45,9 @@ Slupen finns i **två utföranden**, som gör olika jobb:
 
 | Fil | Storlek | Används |
 |---|---|---|
-| `emblem-slup.svg` | 128 kB (49 kB gzip) | Fartyget — skrov, master, segel, rigg, besättning. |
-| `emblem-himmel.svg` | 21 kB (8 kB gzip) | Luftens streck ovanför vattenlinjen. |
-| `emblem-vatten.svg` | 23 kB (9 kB gzip) | Vågstrecken och konstnärens signatur. |
+| `emblem-slup.svg` | 131 kB (50 kB gzip) | Fartyget — skrov, master, segel, rigg, besättning. |
+| `emblem-himmel.svg` | 19 kB (7 kB gzip) | Luftens streck ovanför vattenlinjen. |
+| `emblem-vatten.svg` | 22 kB (8 kB gzip) | Vågstrecken och konstnärens signatur. |
 | `emblem-mark.svg` | 72 kB (29 kB gzip) | Hela fartyget i ett, hårdare förenklat. Litet i sidhuvud, sidfot och varukorg — på varje sida. |
 
 Två skäl till uppdelningen.
@@ -176,6 +176,22 @@ kör `potrace`. Ut kommer `emblem-slup.svg`, `emblem-himmel.svg`,
 `fill="currentColor"` på banorna.
 Tar under tio sekunder. Kräver `potrace` och `ffmpeg`
 (`sudo apt install potrace ffmpeg`).
+
+**Två gränser, inte en.** En enkel tröskel klipper av pennan där den lättar.
+Akterstaget på styrbordssidan tonar ut till ljusstyrka omkring 190 mitt i
+draget; med en fast gräns vid 170 föll just den biten bort, linjen bröts i
+fristående bitar, och de hamnade i himmelslagret — där de sedan drev iväg från
+fartyget när lagren animerades. Därför används hysteres, som i kantdetektering:
+under 170 är säkert bläck, under 215 räknas som bläck *bara om det hänger ihop
+med något starkt*. Bleka fortsättningar på riktiga drag följer med, pappersbruset
+gör det inte. Lagren skrivs sedan i originalets gråskala, så `potrace` får se
+pennans egen tjocklek i stället för en hård svartvit stämpel.
+
+**Vattenlinjen mäts på skrovet, inte på nedersta bläckpixeln.** Under skrovet
+ligger vattenlinjens skugga som tunna drag som hänger ihop med det. Tas de som
+gräns glider den över hundra pixlar för långt ned, och äkta vågstreck ovanför
+hamnar i himmelslagret. Gränsen är i stället sista raden med minst en fjärdedel
+av det tätaste vågräta bandets bläck.
 
 **Så delas fartyget från bakgrunden** (`build/separera.py`): fartyget är en
 sammanhängande massa — skrov, mast, bom, segelkanter, vant och stag hänger ihop

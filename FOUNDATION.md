@@ -45,9 +45,9 @@ Slupen finns i **två utföranden**, som gör olika jobb:
 
 | Fil | Storlek | Används |
 |---|---|---|
-| `emblem-slup.svg` | 131 kB (50 kB gzip) | Fartyget — skrov, master, segel, rigg, besättning. |
+| `emblem-slup.svg` | 130 kB (50 kB gzip) | Fartyget — skrov, master, segel, rigg, besättning. |
 | `emblem-himmel.svg` | 19 kB (7 kB gzip) | Luftens streck ovanför vattenlinjen. |
-| `emblem-vatten.svg` | 22 kB (8 kB gzip) | Vågstrecken och konstnärens signatur. |
+| `emblem-vatten.svg` | 23 kB (9 kB gzip) | Vågstrecken, krusningarna vid skrovet och konstnärens signatur. |
 | `emblem-mark.svg` | 72 kB (29 kB gzip) | Hela fartyget i ett, hårdare förenklat. Litet i sidhuvud, sidfot och varukorg — på varje sida. |
 
 Två skäl till uppdelningen.
@@ -186,6 +186,12 @@ under 170 är säkert bläck, under 215 räknas som bläck *bara om det hänger 
 med något starkt*. Bleka fortsättningar på riktiga drag följer med, pappersbruset
 gör det inte. Lagren skrivs sedan i originalets gråskala, så `potrace` får se
 pennans egen tjocklek i stället för en hård svartvit stämpel.
+
+**Vattenlinjen är också en kniv.** Skrovet vilar på vattnet, så krusningarna
+vid vattenlinjen rör vid det och drogs in i fartygslagret av hysteresen — och
+gungade sedan med båten. Allt fartygsbläck under vattenlinjen flyttas därför
+till vattenlagret. På nuvarande källa är det 6 410 px, drygt en procent av
+fartyget: en krusningslinje och ett sicksackdrag under aktern.
 
 **Vattenlinjen mäts på skrovet, inte på nedersta bläckpixeln.** Under skrovet
 ligger vattenlinjens skugga som tunna drag som hänger ihop med det. Tas de som
